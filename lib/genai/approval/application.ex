@@ -9,6 +9,7 @@ defmodule GenAI.Approval.Application do
       {Registry, keys: :unique, name: GenAI.Approval.Registry},
       {Task.Supervisor, name: GenAI.Approval.TaskSupervisor},
       {DynamicSupervisor, strategy: :one_for_one, name: GenAI.Approval.RunSupervisor},
+      {DynamicSupervisor, strategy: :one_for_one, name: GenAI.Approval.ClientSupervisor},
       {GenAI.Approval.Permission.Store.ETS, name: GenAI.Approval.PermissionStore}
     ]
 

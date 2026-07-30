@@ -59,13 +59,22 @@ table-driven cases) — treat it as the executable spec.
 ## Stores
 
 `GenAI.Approval.Permission.Store` behaviour (`put / revoke / rules / list`),
-addressed as `{module, ref}`. Default: `Store.ETS` — a named public table
-owned by a GenServer (`GenAI.Approval.PermissionStore` under the app
-supervisor), or caller-owned anonymous tables via `ETS.new/0` (tests).
-`rules/3` filters by subject and session and prunes expired rows.
+addressed as `{module, ref}`. `rules/3` filters by subject and session and
+prunes expired rows. Implementations:
 
-M3 adds a durable, entity-backed store (`noizu_labs_entities`) for per-user
-rules shared across Noizu projects; the behaviour is the seam.
+- **`Store.ETS`** (default) — in-memory; named public table owned by a
+  GenServer (`GenAI.Approval.PermissionStore` under the app supervisor), or
+  caller-owned anonymous tables via `ETS.new/0` (tests).
+- **`Store.DETS`** (M3, durable) — disk-persistent, survives restarts;
+  writes are `:dets.sync`ed so a crash cannot lose an `always`/`block`
+  grant. Start with `{Store.DETS, name: MyStore, path: "…/rules.dets"}` and
+  address as `{Store.DETS, MyStore}`.
+
+One conformance suite runs against every implementation
+(`test/genai/approval/permission/store_conformance_test.exs`) — add new
+stores there. For multi-node or cross-app per-user rules, implement the
+behaviour over shared storage (e.g. a `noizu_labs_entities` entity); the
+behaviour is the seam.
 
 ## Server-side backstop (companion work)
 

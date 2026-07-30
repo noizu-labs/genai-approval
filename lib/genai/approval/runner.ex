@@ -776,7 +776,7 @@ defmodule GenAI.Approval.Runner do
   defp complete(state) do
     {outputs, unavailable} = eval_outputs(state)
 
-    state = %{state | status: :completed}
+    state = close_executors(%{state | status: :completed})
     state = %{state | result: build_result(state, outputs, unavailable)}
 
     telemetry(:run, :stop, %{duration: System.monotonic_time(:millisecond) - state.started_at}, %{
@@ -799,7 +799,7 @@ defmodule GenAI.Approval.Runner do
 
     {outputs, unavailable} = eval_outputs(state)
 
-    state = %{state | status: :halted, halt_info: halt_info}
+    state = close_executors(%{state | status: :halted, halt_info: halt_info})
     state = %{state | result: build_result(state, outputs, unavailable)}
 
     telemetry(:run, :stop, %{duration: System.monotonic_time(:millisecond) - state.started_at}, %{
@@ -816,17 +816,36 @@ defmodule GenAI.Approval.Runner do
   defp do_fail(state, reason) do
     state = kill_task(state)
 
-    state = %{
-      state
-      | status: :failed,
-        halt_info: %{reason: inspect(reason), actor: :system, at_step: nil}
-    }
+    state =
+      close_executors(%{
+        state
+        | status: :failed,
+          halt_info: %{reason: inspect(reason), actor: :system, at_step: nil}
+      })
 
     state = %{state | result: build_result(state, %{}, [])}
 
     state
     |> emit(:failed, %{reason: inspect(reason)})
     |> reply_waiters()
+  end
+
+  # Tear down per-run executor resources (e.g. MCP clients) exactly once,
+  # when the run reaches a terminal state (R6.7).
+  defp close_executors(%{executors_closed: true} = state), do: state
+
+  defp close_executors(state) do
+    Enum.each(state.executors, fn {_alias, {mod, ex_state}} ->
+      if function_exported?(mod, :close, 1) do
+        try do
+          mod.close(ex_state)
+        catch
+          _, _ -> :ok
+        end
+      end
+    end)
+
+    Map.put(state, :executors_closed, true)
   end
 
   defp kill_task(%{task: %{ref: ref, pid: pid}} = state) do

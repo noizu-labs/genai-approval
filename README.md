@@ -23,6 +23,7 @@ in the Noizu master repo.
 | [`docs/arch/runner.md`](docs/arch/runner.md) | Run state machine, commands, budgets, events, result contract |
 | [`docs/arch/permissions.md`](docs/arch/permissions.md) | Rule model, normative resolution order, stores, runner gating |
 | [`docs/arch/ui.md`](docs/arch/ui.md) | Rendering model, Host behaviour, LiveView reference UI, escaping |
+| [`docs/arch/mcp.md`](docs/arch/mcp.md) | MCP executor, `submit_approval_script` tool, SubmitHost behaviour |
 
 ## Status
 
@@ -61,8 +62,26 @@ Embed it with:
 live_render(conn, GenAI.Approval.Live.RunView, session: %{"run_id" => run_id})
 ```
 
-Next: M3 durable permission store, M4 MCP executor (`noizu_mcp`) +
-`submit_approval_script` tool, M5 Hologram UI +
+**M3 — durable permission store ✅**
+
+- `Permission.Store.DETS` — disk-persistent rules that survive restarts
+  (synced writes); same semantics as ETS, one conformance suite covers both
+
+**M4 — MCP integration ✅** (optional `noizu_mcp ~> 0.1` dep)
+
+- `Executor.MCP` — script steps execute against real MCP servers: one
+  supervised `Noizu.MCP.Client` per declared endpoint, preamble
+  `credential("id")` refs resolved via host config, `tools/list` cached for
+  edit forms/risk badges, clients torn down when the run terminates;
+  `isError` tool results become step failures
+- `GenAI.Approval.MCP.SubmitApprovalScript` — the v1 interop tool: any MCP
+  agent submits `{script, variables, timeout_ms}`; your
+  `GenAI.Approval.SubmitHost` maps it to run options and surfaces the run;
+  the call parks while the operator drives and returns the JSON-sanitized
+  §9 result as structured content
+
+Next: elicitation fallback for plain-MCP operator hosts, `noizu_mcp`
+server-side permission backstop, M5 Hologram UI +
 `com.noizu/approval-scripts` extension draft.
 
 ## Quick taste
@@ -100,7 +119,7 @@ source = """
 ## Tests
 
 ```
-mix test   # 90 tests: parser golden/rejection/property, runner state machine,
+mix test   # 111 tests: parser golden/rejection/property, runner state machine,
            # budgets, failure paths, permission matrix, store, runner gating,
-           # LiveView interaction + escaping (LiveViewTest)
+           # LiveView interaction + escaping, DETS durability, MCP executor + submit tool
 ```
