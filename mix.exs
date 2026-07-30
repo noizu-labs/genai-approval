@@ -37,6 +37,10 @@ defmodule GenAI.Approval.MixProject do
   defp deps do
     [
       {:telemetry, "~> 1.2"},
+      {:jason, "~> 1.4"},
+      # Reference UI — consumers without LiveView can still use the engine.
+      {:phoenix_live_view, "~> 1.1", optional: true},
+      {:lazy_html, ">= 0.1.0", only: [:dev, :test]},
       {:stream_data, "~> 1.1", only: [:dev, :test]},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false}
     ]

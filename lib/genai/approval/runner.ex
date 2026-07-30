@@ -39,6 +39,12 @@ defmodule GenAI.Approval.Runner do
 
   def events(run), do: GenServer.call(run, :events)
 
+  @doc "Add a live event subscriber (defaults to the caller)."
+  def subscribe(run, pid \\ self()), do: GenServer.call(run, {:subscribe, pid})
+
+  @doc "Full UI-facing state snapshot (feeds `GenAI.Approval.Render.model/1`)."
+  def snapshot(run), do: GenServer.call(run, :snapshot)
+
   # -- init ------------------------------------------------------------------
 
   @impl GenServer
@@ -98,7 +104,7 @@ defmodule GenAI.Approval.Runner do
         breakpoints: breakpoints,
         bp_hits: MapSet.new(),
         overrides: %{},
-        subscriber: Keyword.get(opts, :subscriber),
+        subscribers: List.wrap(Keyword.get(opts, :subscriber)),
         seq: 0,
         events: [],
         waiters: [],
@@ -167,6 +173,49 @@ defmodule GenAI.Approval.Runner do
 
   def handle_call(:events, _from, state) do
     {:reply, Enum.reverse(state.events), state}
+  end
+
+  def handle_call({:subscribe, pid}, _from, state) do
+    {:reply, :ok, %{state | subscribers: Enum.uniq([pid | state.subscribers])}}
+  end
+
+  def handle_call(:snapshot, _from, state) do
+    steps =
+      Enum.map(state.script.steps, fn step ->
+        %{
+          id: step.id,
+          title: step.title,
+          line: step.line,
+          end_line: step.end_line,
+          calls: Enum.map(step.calls, fn {e, c} -> %{endpoint: e, command: c} end),
+          attrs: step.attrs,
+          breakpoint: MapSet.member?(state.breakpoints, step.id),
+          status: step_status(state, step.id),
+          result: Map.get(state.results, step.id)
+        }
+      end)
+
+    snapshot = %{
+      run_id: state.run_id,
+      status: state.status,
+      mode: state.mode,
+      source: state.script.source,
+      steps: steps,
+      pending: state.pending && state.pending.id,
+      pending_failed: state.pending_failed,
+      awaiting: state.awaiting,
+      branches: state.branch_log,
+      env: state.env,
+      vars: Enum.map(state.script.vars, &%{name: &1.name, type: &1.type}),
+      notes: state.notes,
+      edits: state.edits,
+      grants: state.grants,
+      halt: state.halt_info,
+      result: state.result,
+      seq: state.seq
+    }
+
+    {:reply, snapshot, state}
   end
 
   def handle_call(:await, from, state) do
@@ -795,6 +844,16 @@ defmodule GenAI.Approval.Runner do
 
   defp terminal?(status), do: status in [:completed, :halted, :failed]
 
+  defp step_status(state, step_id) do
+    cond do
+      result = Map.get(state.results, step_id) -> result.status
+      state.pending && state.pending.id == step_id -> :pending
+      MapSet.member?(state.not_reached, step_id) -> :not_reached
+      terminal?(state.status) -> :not_reached
+      true -> :waiting
+    end
+  end
+
   # -- results ---------------------------------------------------------------
 
   defp record_result(state, step, status, calls, duration, reason \\ nil) do
@@ -862,7 +921,7 @@ defmodule GenAI.Approval.Runner do
     seq = state.seq + 1
     event = Map.merge(%{seq: seq, type: type, run_id: state.run_id}, payload)
 
-    if state.subscriber, do: send(state.subscriber, {:genai_approval, state.run_id, event})
+    Enum.each(state.subscribers, &send(&1, {:genai_approval, state.run_id, event}))
 
     %{state | seq: seq, events: Enum.take([event | state.events], @event_ring)}
   end

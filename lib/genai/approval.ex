@@ -63,6 +63,12 @@ defmodule GenAI.Approval do
   @doc "Replay buffer of run events (oldest first, bounded ring)."
   def events(run), do: Runner.events(resolve(run))
 
+  @doc "Add a live event subscriber (defaults to the caller)."
+  def subscribe(run, pid \\ self()), do: Runner.subscribe(resolve(run), pid)
+
+  @doc "UI-facing state snapshot; feed to `GenAI.Approval.Render.model/1`."
+  def snapshot(run), do: Runner.snapshot(resolve(run))
+
   defp resolve(pid) when is_pid(pid), do: pid
 
   defp resolve(run_id) when is_binary(run_id) do

@@ -32,7 +32,8 @@ defmodule GenAI.Approval.Script do
       statements: [],
       attrs: %{},
       calls: [],
-      line: nil
+      line: nil,
+      end_line: nil
     ]
   end
 
@@ -48,7 +49,15 @@ defmodule GenAI.Approval.Script do
 
   defmodule If do
     @moduledoc "Conditional. `{{#unless}}` parses to an If with `negate: true`."
-    defstruct [:condition, then_body: [], else_body: [], negate: false, line: nil]
+    defstruct [
+      :condition,
+      then_body: [],
+      else_body: [],
+      negate: false,
+      line: nil,
+      else_line: nil,
+      end_line: nil
+    ]
   end
 
   defmodule Output do

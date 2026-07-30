@@ -330,10 +330,10 @@ defmodule GenAI.Approval.Parser do
       [{:mustache, toks, pos} | rest] ->
         cond do
           block_close(toks) == close and close != nil ->
-            {Enum.reverse(acc), [{:closed} | rest], counter}
+            {Enum.reverse(acc), [{:closed, pos} | rest], counter}
 
           match?([{:ident, "else", _}], toks) and close in ["if", "unless"] ->
-            {Enum.reverse(acc), [{:else} | rest], counter}
+            {Enum.reverse(acc), [{:else, pos} | rest], counter}
 
           true ->
             case block_open(toks) do
@@ -406,7 +406,7 @@ defmodule GenAI.Approval.Parser do
     counter = counter + 1
     id = "s#{counter}"
 
-    {stmts, rest} = parse_step_statements(segs, pos, [])
+    {stmts, rest, end_line} = parse_step_statements(segs, pos, [])
 
     step = %Step{
       id: id,
@@ -414,7 +414,8 @@ defmodule GenAI.Approval.Parser do
       attrs: attrs,
       statements: stmts,
       calls: extract_calls(stmts),
-      line: elem(pos, 0)
+      line: elem(pos, 0),
+      end_line: end_line
     }
 
     {step, rest, counter}
@@ -448,7 +449,7 @@ defmodule GenAI.Approval.Parser do
       [{:mustache, toks, pos} | rest] ->
         cond do
           block_close(toks) == "step" ->
-            {Enum.reverse(acc), rest}
+            {Enum.reverse(acc), rest, elem(pos, 0)}
 
           match?([{:ident, "assign", _} | _], toks) ->
             [_ | t] = toks
@@ -543,7 +544,7 @@ defmodule GenAI.Approval.Parser do
     {then_body, segs2, counter2} = parse_body(segs, tag, [], counter)
 
     case segs2 do
-      [{:else} | rest] ->
+      [{:else, else_pos} | rest] ->
         if negate do
           fail(:unexpected_token, "{{else}} is not supported in {{#unless}}", pos)
         end
@@ -551,13 +552,15 @@ defmodule GenAI.Approval.Parser do
         {else_body, segs3, counter3} = parse_body(rest, tag, [], counter2)
 
         case segs3 do
-          [{:closed} | rest2] ->
+          [{:closed, close_pos} | rest2] ->
             node = %If{
               condition: condition,
               then_body: then_body,
               else_body: else_body,
               negate: negate,
-              line: elem(pos, 0)
+              line: elem(pos, 0),
+              else_line: elem(else_pos, 0),
+              end_line: elem(close_pos, 0)
             }
 
             {node, rest2, counter3}
@@ -566,13 +569,14 @@ defmodule GenAI.Approval.Parser do
             fail(:unterminated, "missing {{/#{tag}}}", pos)
         end
 
-      [{:closed} | rest] ->
+      [{:closed, close_pos} | rest] ->
         node = %If{
           condition: condition,
           then_body: then_body,
           else_body: [],
           negate: negate,
-          line: elem(pos, 0)
+          line: elem(pos, 0),
+          end_line: elem(close_pos, 0)
         }
 
         {node, rest, counter2}
