@@ -17,9 +17,25 @@ defmodule GenAI.Approval.MixProject do
         "Interactive approval scripts for agents: a non-Turing-complete, steppable " <>
           "script format a human drives call-by-call, plus scoped allow/block command permissions.",
       source_url: @source_url,
+      homepage_url: @source_url,
+      docs: [
+        main: "readme",
+        extras: ["README.md", "LICENSE"]
+      ],
       package: [
+        name: "genai_approval",
         licenses: ["MIT"],
-        links: %{"GitHub" => @source_url}
+        links: %{
+          "GitHub" => @source_url,
+          "Changelog" => "#{@source_url}/releases"
+        },
+        files: ~w(
+          lib
+          mix.exs
+          README.md
+          LICENSE
+          .formatter.exs
+        )
       ]
     ]
   end
