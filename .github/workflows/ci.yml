@@ -89,7 +89,7 @@ jobs:
               echo "| \`$job\` | \`$step\` | $((dur / 60))m$((dur % 60))s | ok |" >> "$SUMMARY"
             fi
           done < <(echo "$jobs_json" | jq -r '
-            .jobs[] | select(.name | test("^(build)$")) | .name as $job |
+            .jobs[] | select(.name | test("^(Build and test)$")) | .name as $job |
             .steps[] | select(.status == "completed" and .conclusion != "skipped" and .conclusion != null) |
             [$job, .name, .started_at, .completed_at] | @tsv')
           start=$(date -d "$RUN_STARTED_AT" +%s); now=$(date +%s)
