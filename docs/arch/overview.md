@@ -20,10 +20,11 @@ flowchart LR
     subgraph run ["Run (per-run supervision)"]
       R[Runner GenServer] --> EX[Executor behaviour]
       EX --> LOC[Executor.Local]
-      EX -. M4 .-> MCP[Executor.MCP]
+      EX --> MCP[Executor.MCP]
       R --> PERM[Permission.decide/4]
       PERM --> ST[Permission.Store behaviour]
       ST --> ETS[Store.ETS]
+      ST --> DETS[Store.DETS durable]
     end
 
     subgraph ui ["Surface"]
@@ -50,8 +51,10 @@ flowchart LR
 | `GenAI.Approval.Runner` | `lib/genai/approval/runner.ex` | The run state machine (one GenServer per run) |
 | `GenAI.Approval.Executor` | `lib/genai/approval/executor.ex` | Execution-target behaviour (`prepare/execute/describe/close`) |
 | `GenAI.Approval.Executor.Local` | `lib/genai/approval/executor/local.ex` | Native in-process handlers |
+| `GenAI.Approval.Executor.MCP` | `lib/genai/approval/executor/mcp.ex` | Execute calls over MCP (`noizu_mcp`, optional) |
+| `GenAI.Approval.SubmitHost` | `lib/genai/approval/submit_host.ex` | Host behaviour for the MCP submit flow |
 | `GenAI.Approval.Permission` | `lib/genai/approval/permission.ex` | Rule struct + normative resolution |
-| `GenAI.Approval.Permission.Store(.ETS)` | `lib/genai/approval/permission/store*` | Pluggable rule persistence; ETS default |
+| `GenAI.Approval.Permission.Store(.ETS/.DETS)` | `lib/genai/approval/permission/store*` | Pluggable rule persistence; ETS default, DETS durable |
 | `GenAI.Approval.Render` | `lib/genai/approval/render.ex` | Shared UI model: tolerant highlighter + annotated lines + affordances |
 | `GenAI.Approval.Host` | `lib/genai/approval/host.ex` | Behaviour for host apps (present / on_event / resolve_credential) |
 | `GenAI.Approval.Live.RunView` | `lib/genai/approval/live/run_view.ex` | LiveView reference UI (compiled only when LiveView is present) |
@@ -86,6 +89,6 @@ stay responsive while a call is in flight. A crashing handler becomes a step
 
 - **M1** ✅ grammar + engine + Local executor + permission engine
 - **M2** ✅ event stream, snapshot, Render model, Host behaviour, LiveView UI
-- **M3** durable/entity-backed permission store
-- **M4** MCP executor (`noizu_mcp`) + `submit_approval_script` tool + elicitation fallback
+- **M3** ✅ durable permission store (`Store.DETS`; entity-backed variant left to hosts via the Store behaviour)
+- **M4** ✅ MCP executor (`noizu_mcp`) + `submit_approval_script` tool + SubmitHost
 - **M5** Hologram UI + `com.noizu/approval-scripts` protocol extension draft
