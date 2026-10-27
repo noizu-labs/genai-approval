@@ -1,5 +1,7 @@
 defmodule GenAI.Approval.Permission do
   @moduledoc """
+  〚📦:63b89615-9f17-519a-9587-a225ab5e6488〛 GenAI.Approval.Permission :: Rule model + normative resolution (default-deny, block > allow, scope narrowing)
+
   Allow/block command rules and their resolution (PRD §8).
 
   Resolution order (normative, §8.2):

@@ -1,5 +1,7 @@
 # Project Architecture
 
+<!-- 〚📁:b1beae39-3797-5c3a-8ed4-ef527fe55d12〛 genai-approval PROJ-ARCH doc :: Architecture overview: components, diagram, key decisions, stack -->
+
 ## Overview
 
 `genai_approval` is an Elixir library for human-in-the-loop gating of agent

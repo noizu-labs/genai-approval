@@ -1,0 +1,122 @@
+---
+pointers:
+  093d0967-65c6-55a9-861c-507829f3840f:
+    created_at: 2026-10-27T02:23:47.979468Z
+    description: 'Entry point: doc map, milestone status (M1-M4), quick taste'
+    file_path: README.md
+    function: genai-approval README
+    kind: file
+    line: 3
+    locations:
+      - file_path: README.md
+        line: 3
+    token: 𓛕𔃄𓴨𔖟
+    updated_at: 2026-10-27T02:23:47.979468Z
+  0f8f7bbe-49cc-5e28-94cc-3cd527bda87b:
+    created_at: 2026-10-27T02:23:47.979444Z
+    description: 'Executor behaviour: Local and MCP step adapters'
+    file_path: lib/genai/approval/executor.ex
+    function: GenAI.Approval.Executor
+    kind: module
+    line: 3
+    locations:
+      - file_path: lib/genai/approval/executor.ex
+        line: 3
+    token: 𐦍𔎿𓻍𓣛
+    updated_at: 2026-10-27T02:23:47.979444Z
+  19e03157-804e-57bf-a650-6152aac9f703:
+    created_at: 2026-10-27T02:23:47.979495Z
+    description: 'Steppable run GenServer: breakpoints, budgets, edits, event ring'
+    file_path: lib/genai/approval/runner.ex
+    function: GenAI.Approval.Runner
+    kind: module
+    line: 3
+    locations:
+      - file_path: lib/genai/approval/runner.ex
+        line: 3
+    token: 𔊥𓡺𓅘𓢓
+    updated_at: 2026-10-27T02:23:47.979495Z
+  63b89615-9f17-519a-9587-a225ab5e6488:
+    created_at: 2026-10-27T02:23:47.979483Z
+    description: Rule model + normative resolution (default-deny, block > allow, scope narrowing)
+    file_path: lib/genai/approval/permission.ex
+    function: GenAI.Approval.Permission
+    kind: module
+    line: 3
+    locations:
+      - file_path: lib/genai/approval/permission.ex
+        line: 3
+    token: 𓨯𔌜𓙓𓥈
+    updated_at: 2026-10-27T02:23:47.979483Z
+  69224695-cc5d-5008-8bf0-692b6cc3a418:
+    created_at: 2026-10-27T02:23:47.979491Z
+    description: 'Post-parse checks: undeclared vars/endpoints, pure conditions, no inline secrets'
+    file_path: lib/genai/approval/static_checks.ex
+    function: GenAI.Approval.StaticChecks
+    kind: module
+    line: 3
+    locations:
+      - file_path: lib/genai/approval/static_checks.ex
+        line: 3
+    token: 𓹽𓺾𓭣𓿘
+    updated_at: 2026-10-27T02:23:47.979491Z
+  6bd0d225-9d15-59a1-b7a9-c4096111d5c0:
+    created_at: 2026-10-27T02:23:47.979480Z
+    description: 'Recursive-descent parser: source to Script AST with size/step caps'
+    file_path: lib/genai/approval/parser.ex
+    function: GenAI.Approval.Parser
+    kind: module
+    line: 3
+    locations:
+      - file_path: lib/genai/approval/parser.ex
+        line: 3
+    token: 𓟀𔇳𓲑𔑠
+    updated_at: 2026-10-27T02:23:47.979480Z
+  b1beae39-3797-5c3a-8ed4-ef527fe55d12:
+    created_at: 2026-10-27T02:23:47.979476Z
+    description: 'Architecture overview: components, diagram, key decisions, stack'
+    file_path: docs/PROJ-ARCH.md
+    function: genai-approval PROJ-ARCH doc
+    kind: file
+    line: 3
+    locations:
+      - file_path: docs/PROJ-ARCH.md
+        line: 3
+    token: 𓜙𓣭𓾜𓫢
+    updated_at: 2026-10-27T02:23:47.979476Z
+  b9178460-17bb-5556-83c8-d3593b177af3:
+    created_at: 2026-10-27T02:23:47.979487Z
+    description: 'Public API surface: load/1, start_run/2, command/2, await/2, snapshot/1'
+    file_path: lib/genai/approval.ex
+    function: GenAI.Approval
+    kind: module
+    line: 3
+    locations:
+      - file_path: lib/genai/approval.ex
+        line: 3
+    token: 𓰔𔎤𓦇𓣳
+    updated_at: 2026-10-27T02:23:47.979487Z
+  d650f2f3-dc0d-575a-8cb8-f1e8aeedfab4:
+    created_at: 2026-10-27T02:23:47.979465Z
+    description: Embeddable LiveView reference UI (optional phoenix_live_view dep)
+    file_path: lib/genai/approval/live/run_view.ex
+    function: GenAI.Approval.Live.RunView
+    kind: module
+    line: 4
+    locations:
+      - file_path: lib/genai/approval/live/run_view.ex
+        line: 4
+    token: 𓓗𓜴𓪫𔃴
+    updated_at: 2026-10-27T02:23:47.979465Z
+  ecd9399d-ece0-5503-b564-d59f6c99a3d3:
+    created_at: 2026-10-27T02:23:47.979460Z
+    description: 'MCP tool submit_approval_script: park-until-done v1 agent interop'
+    file_path: lib/genai/approval/mcp/submit_approval_script.ex
+    function: GenAI.Approval.MCP.SubmitApprovalScript
+    kind: module
+    line: 4
+    locations:
+      - file_path: lib/genai/approval/mcp/submit_approval_script.ex
+        line: 4
+    token: 𓅤𔖈𔕆𓀓
+    updated_at: 2026-10-27T02:23:47.979460Z

@@ -1,9 +1,12 @@
 defmodule GenAI.Approval.Executor do
   @moduledoc """
+  〚📦:0f8f7bbe-49cc-5e28-94cc-3cd527bda87b〛 GenAI.Approval.Executor :: Executor behaviour: Local and MCP step adapters
+
   Behaviour for script execution targets (PRD §6.4).
 
-  Adapters: `GenAI.Approval.Executor.Local` (native handlers, in-process);
-  an MCP adapter over `noizu_mcp` clients arrives with milestone M4.
+  Adapters: `GenAI.Approval.Executor.Local` (native handlers, in-process) and
+  `GenAI.Approval.Executor.MCP` (M4 — one supervised `Noizu.MCP.Client` per
+  declared endpoint, `noizu_mcp` optional dep).
   """
 
   @type endpoint_decl :: GenAI.Approval.Script.Endpoint.t()

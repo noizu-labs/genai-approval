@@ -1,5 +1,7 @@
 defmodule GenAI.Approval do
   @moduledoc """
+  〚📦:b9178460-17bb-5556-83c8-d3593b177af3〛 GenAI.Approval :: Public API surface: load/1, start_run/2, command/2, await/2, snapshot/1
+
   Interactive approval scripts for agents.
 
   An agent submits a small, non-Turing-complete script (endpoint preamble,

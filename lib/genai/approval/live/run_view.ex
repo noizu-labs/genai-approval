@@ -1,6 +1,8 @@
 if Code.ensure_loaded?(Phoenix.LiveView) do
   defmodule GenAI.Approval.Live.RunView do
     @moduledoc """
+    〚📦:d650f2f3-dc0d-575a-8cb8-f1e8aeedfab4〛 GenAI.Approval.Live.RunView :: Embeddable LiveView reference UI (optional phoenix_live_view dep)
+
     Phoenix LiveView reference UI for an approval run (PRD R7.1).
 
     Mount with the run id in the session:
