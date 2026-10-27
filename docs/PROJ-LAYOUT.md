@@ -21,6 +21,7 @@ genai-approval/
 │           ├── error.ex                 # Machine-readable error codes
 │           ├── permission.ex            # Rule model + resolution
 │           ├── permission/
+│           │   ├── store.ex             # Store behaviour (rule persistence contract)
 │           │   └── store/               # dets / ets store backends
 │           ├── executor/                # local + MCP step executors
 │           ├── mcp/
@@ -37,8 +38,14 @@ genai-approval/
 │   ├── support/                         # Test endpoint + fixtures (compiled in :test)
 │   └── test_helper.exs
 ├── docs/
-│   └── arch/                            # → [layout/../arch.md](arch/) overview, script-format,
+│   ├── PROJ-LAYOUT.md / .summary.md     # This file — structure map
+│   ├── PROJ-ARCH.md / .summary.md       # Architecture overview
+│   ├── PROJ-SCHEMA.md / .summary.md     # Data shapes / interfaces
+│   ├── THREAT-MODEL.md / .summary.md    # Attack surface + vulnerability register
+│   └── arch/                            # Detail docs: overview, script-format,
 │                                        #   runner, permissions, ui, mcp
+├── .github/
+│   └── workflows/ci.yml                 # CI — mix compile + test, PR timing tracker
 ├── doc/                                 # Generated ex_doc output (gitignored)
 ├── .formatter.exs                       # Elixir formatter config
 ├── .tool-versions                       # elixir 1.20.1-otp-29 / erlang 29.0.2 (asdf/mise)

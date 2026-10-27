@@ -25,3 +25,7 @@ graph TD
 | Error | `Error` | `code (18 stable atoms), message, line, column` |
 | Event | runner internal | `%{seq, type, run_id, ...payload}`, replay ring |
 | Result | `Result.sanitize/1` | JSON: string keys, ISO-8601, atoms→strings |
+| Config | `config/config.exs` | test env only (test endpoint, Jason, logger) — no secrets/env vars |
+| App env | `:genai_approval, :submit_host` | SubmitHost module; absent ⇒ tool error |
+| MCP tool | `submit_approval_script` | in: `script` (req), `variables`, `timeout_ms`; out: sanitized §9 result |
+| DETS rules | `Store.DETS` | `:set` table, rule-id keys, `:call` scope never persisted, sync per write |

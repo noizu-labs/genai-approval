@@ -107,3 +107,46 @@ and step lifecycle events. The ring keeps the last `@event_ring` events;
 JSON-serializable data: string keys, ISO-8601 `DateTime`/`Date`, atoms →
 strings, tuples/pids/refs → inspected strings. The MCP
 `submit_approval_script` tool returns this as structured content.
+
+## Config schema (`config/config.exs`)
+
+Test-environment only — the library ships no runtime config and reads no
+environment variables or secret files.
+
+| Scope | Key | Value |
+|-------|-----|-------|
+| `:genai_approval, GenAI.Approval.Test.Endpoint` | `secret_key_base` | 64-char test value — test endpoint only |
+| `:genai_approval, GenAI.Approval.Test.Endpoint` | `live_view` | `[signing_salt: "genai_approval_test_salt"]`, `server: false` |
+| `:phoenix` | `:json_library` | `Jason` |
+| `:logger` | `:level` | `:warning` |
+
+Host application environment read by the engine:
+
+| Key | Purpose |
+|-----|---------|
+| `config :genai_approval, :submit_host` | Module implementing `GenAI.Approval.SubmitHost`; absent ⇒ `submit_approval_script` returns `{:error, :submit_host_not_configured}` |
+
+Per-run options (not application env) carry executors, `subscriber`,
+`permission: [store: {Module, name}, subject:, session_id:]` and budgets —
+see [arch/runner.md](arch/runner.md).
+
+## Data interface schemas
+
+### MCP tool: `submit_approval_script`
+
+| Input | Type | Required | Notes |
+|-------|------|----------|-------|
+| `script` | string | yes | Approval-script source (handlebars-style) |
+| `variables` | object | no | Initial bindings, merged over script defaults (`additionalProperties: true`) |
+| `timeout_ms` | integer | no | Max wait for the operator; default = no limit |
+
+`additionalProperties: false` on the top-level object. Output: the
+`Result.sanitize/1` §9 wire shape as structured content; parse rejections
+return as tool execution errors carrying `code`/`line`/`column`.
+
+### DETS rule file (`Store.DETS`)
+
+Single DETS `:set` table at the host-supplied `:path`; keys are rule ids,
+values are `Permission.Rule` maps. `:call`-scoped rules are never written;
+each write is followed by `:dets.sync/1`. See
+[arch/permissions.md](arch/permissions.md) for resolution semantics.
