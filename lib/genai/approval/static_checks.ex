@@ -1,5 +1,7 @@
 defmodule GenAI.Approval.StaticChecks do
   @moduledoc """
+  〚📦:69224695-cc5d-5008-8bf0-692b6cc3a418〛 GenAI.Approval.StaticChecks :: Post-parse checks: undeclared vars/endpoints, pure conditions, no inline secrets
+
   Post-parse validation (PRD R5.1–R5.6). Returns a list of `%Error{}` —
   empty when the script is valid. All applicable errors are reported, not
   just the first.

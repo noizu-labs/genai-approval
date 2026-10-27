@@ -1,5 +1,7 @@
 defmodule GenAI.Approval.Parser do
   @moduledoc """
+  〚📦:6bd0d225-9d15-59a1-b7a9-c4096111d5c0〛 GenAI.Approval.Parser :: Recursive-descent parser: source to Script AST with size/step caps
+
   Recursive-descent parser for the approval-script grammar (PRD §5).
 
   `parse/2` returns `{:ok, %Script{}}` or `{:error, [%Error{}]}` — parse

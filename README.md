@@ -1,5 +1,7 @@
 # GenAI Approval
 
+<!-- 〚📁:093d0967-65c6-55a9-861c-507829f3840f〛 genai-approval README :: Entry point: doc map, milestone status (M1-M4), quick taste -->
+
 Interactive approval scripts for agents — a GenAI-ecosystem service.
 
 An agent submits a small, deliberately **non-Turing-complete** script:

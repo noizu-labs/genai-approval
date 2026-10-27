@@ -1,5 +1,7 @@
 defmodule GenAI.Approval.Runner do
   @moduledoc """
+  〚📦:19e03157-804e-57bf-a650-6152aac9f703〛 GenAI.Approval.Runner :: Steppable run GenServer: breakpoints, budgets, edits, event ring
+
   One interactive approval run (PRD §6): a GenServer holding the run state
   machine. Steps execute in supervised tasks so control commands (halt above
   all) stay responsive while a call is in flight.

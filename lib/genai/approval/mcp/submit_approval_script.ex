@@ -1,6 +1,8 @@
 if Code.ensure_loaded?(Noizu.MCP.Server.Tool) do
   defmodule GenAI.Approval.MCP.SubmitApprovalScript do
     @moduledoc """
+    〚📦:ecd9399d-ece0-5503-b564-d59f6c99a3d3〛 GenAI.Approval.MCP.SubmitApprovalScript :: MCP tool submit_approval_script: park-until-done v1 agent interop
+
     The v1 interop surface (PRD §10): a standard MCP tool any client can
     call to submit an approval script. Register it on a `Noizu.MCP.Server`:
 
