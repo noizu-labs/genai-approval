@@ -2,6 +2,10 @@
 
 Dated work log — newest first.
 
+## 2026-10-28
+
+- docs: add AGENT-README.md (agent orientation)
+
 ## 2026-10-26
 
 - docs(pointers): seed `.meta/pointers.yaml` with 10 load-bearing loci (README, PROJ-ARCH, engine public surface); corrects the stale M4 note in `Executor`'s moduledoc (#5)
