@@ -2,6 +2,10 @@
 
 Dated work log — newest first.
 
+## 2026-11-10
+
+- docs: M4 header `noizu_mcp` constraint corrected to `~> 0.5.0` (matches `mix.exs`)
+
 ## 2026-10-28
 
 - docs: add AGENT-README.md (agent orientation)

@@ -69,7 +69,7 @@ live_render(conn, GenAI.Approval.Live.RunView, session: %{"run_id" => run_id})
 - `Permission.Store.DETS` — disk-persistent rules that survive restarts
   (synced writes); same semantics as ETS, one conformance suite covers both
 
-**M4 — MCP integration ✅** (optional `noizu_mcp ~> 0.1` dep)
+**M4 — MCP integration ✅** (optional `noizu_mcp ~> 0.5.0` dep)
 
 - `Executor.MCP` — script steps execute against real MCP servers: one
   supervised `Noizu.MCP.Client` per declared endpoint, preamble
